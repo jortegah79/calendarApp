@@ -1,93 +1,138 @@
+import { useEffect } from "react";
+import { useAuthStore, useForm } from "../../hooks"
+import Swal from "sweetalert2";
 
+
+const loginFormFields = {
+  loginEmail: '',
+  loginPassword: ''
+}
+const registerFormFields = {
+  registerEmail: '',
+  registerPassword: '',
+  registerPassword2: '',
+  registerName: ''
+}
 
 export const LoginPage = () => {
 
+  const { loginEmail, loginPassword, onInputChange: onLoginInputChange } = useForm(loginFormFields);
+  const { registerEmail, registerName, registerPassword, registerPassword2, onInputChange: onRegisterInputChange } = useForm(registerFormFields);
+  const { startLogin, startRegister,errorMessage } = useAuthStore();
 
-    return (
-        <>
-            <div className="h-screen bg-indigo-700 flex justify-center items-center ">
-                <div className="w-4/6 m-auto flex flex-col  lg:flex-row  py-50 justify-center gap-8 ">
-                <div className="bg-white h-[250]  rounded-4xl p-6 outline-1 outline-amber-700 shadow-md shadow-amber-300">
-                        <h3 className="p-4 text-center bg-gradient-to-r from-blue-700 to-blue-300 bg-clip-text text-4xl font-extrabold text-transparent
-                         ">Ingreso</h3>
-                        <form className="p-4  flex-column flex-1/3 ">
-                            <div className="w-100 mx-auto mb-4">
-                                <input
-                                    type="text"
-                                    className="w-100 p-4 rounded-lg placeholder:text-orange-300 placeholder:text-xl 
-                                    border-stone-600 outline-blue-600 border hover:outline-1  text-violet-700"
-                                    placeholder="Correo"
-                                />
-                            </div>
-                            <div className="w-100 mx-auto mb-4">
-                                <input
-                                    type="password"
-                                    className="w-100 p-4 rounded-lg placeholder:text-orange-300 placeholder:text-xl 
-                                    border-stone-600 outline-blue-600 border hover:outline-1  text-violet-700"
-                                    placeholder="Contraseña"
-                                />
-                            </div>
-                            <div className="w-100 mx-auto  mb-4">
-                                <input
-                                    type="submit"
-                                    className="block w-100 bg-radial from-10% bg-blue-200 hover:bg-cyan-200 to-blue-500 hover:to-cyan-900 text-blue-900 p-3 px-8 rounded-xl text-2xl 
-                                     shadow-stone-400 shadow-lg border border-stone-600  hover:shadow-stone-600 hover:shadow-md  hover:border-stone-400 duration-150"
-                                    value="Login"
-                                />
-                            </div>
-                        </form>
-                    </div>
+  useEffect(() => {
+    if (errorMessage !== undefined) {
+      Swal.fire('Error en la autentificacion', errorMessage, 'error');
+    }
+  }, [errorMessage]);
 
-                    <div className="bg-white h-[250]  rounded-4xl p-6 outline-1 outline-amber-700 shadow-md shadow-amber-300">
-                        <h3 className="p-4 text-center bg-gradient-to-r from-blue-700 to-blue-300 bg-clip-text text-4xl font-extrabold text-transparent
-                         ">Registro</h3>
-                        <form className="p-4  flex-column  ">
-                            <div className="w-100 mx-auto mb-4">
-                                <input
-                                    type="text"
-                                    className="w-100 p-4 rounded-lg placeholder:text-orange-300 placeholder:text-xl 
-                                    border-stone-600 outline-blue-600 border hover:outline-1 text-violet-700"
-                                    placeholder="Nombre"
-                                />
-                            </div>
-                            <div className="w-100 mx-auto mb-4">
-                                <input
-                                    type="email"
-                                    className="w-100 p-4 rounded-lg placeholder:text-orange-300 placeholder:text-xl 
-                                    border-stone-600 outline-blue-600 border hover:outline-1  text-violet-700"
-                                    placeholder="Correo"
-                                />
-                            </div>
-                            <div className="w-100 mx-auto mb-4">
-                                <input
-                                    type="password"
-                                    className="w-100 p-4 rounded-lg placeholder:text-orange-300 placeholder:text-xl 
-                                    border-stone-600 outline-blue-600 border hover:outline-1  text-violet-700"
-                                    placeholder="Contraseña"
-                                />
-                            </div>
+  const loginSubmit = (e) => {
+    e.preventDefault();
+    startLogin({ email: loginEmail, password: loginPassword })
+  }
 
-                            <div className="w-100 mx-auto mb-4">
-                                <input
-                                    type="password"
-                                    className="w-100 p-4 rounded-lg placeholder:text-orange-300 placeholder:text-xl 
-                                    border-stone-600 outline-blue-600 border hover:outline-1  text-violet-700"
-                                    placeholder="Repita la contraseña"
-                                />
-                            </div>
+  const registerSubmit = (e) => {
+    e.preventDefault();
+    if (registerPassword !== registerPassword2) {
+      Swal.fire('Error en el registro','las contraseñas no son iguales...','error');
+      return;
+    }
+    startRegister({email:registerEmail, name:registerName, password:registerPassword})
+    //console.log({ registerEmail, registerName, registerPassword, registerPassword2 });
+  }
+  return (
+    <>
+      <div className="container">
+        <div className="row">
+          <div className="col-12 col-lg-6 ">
+            <h3 className="mt-5 display-6 text-uppercase text-center text-secondary">Ingreso</h3>
+            <form className="p-2 d-flex flex-column " onSubmit={loginSubmit}>
+              <div className="w-100 mx-auto mb-4">
+                <input
+                  type="text"
+                  className="form-control py-4"
+                  placeholder="Correo"
+                  name="loginEmail"
+                  value={loginEmail}
+                  onChange={onLoginInputChange}
+                />
+              </div>
+              <div className="w-100 mx-auto mb-4">
+                <input
+                  type="password"
+                  className="form-control py-4"
+                  placeholder="Contraseña"
+                  name="loginPassword"
+                  value={loginPassword}
+                  onChange={onLoginInputChange}
+                />
+              </div>
+              <div className="w-100   mb-4">
+                <input
+                  type="submit"
+                  className=" btn fs-4 py-3 w-100 btn-outline-secondary"
+                  value="Login"
+                />
+              </div>
+            </form>
+          </div>
 
-                            <div className="w-100 mx-auto mb-4 ">
-                                <input
-                                    type="submit"
-                                    className="block w-100 bg-radial from-10% bg-blue-200 hover:bg-cyan-200 to-blue-500 hover:to-cyan-900 text-blue-900 p-3 px-8 rounded-xl text-2xl 
-                                    shadow-stone-400 shadow-lg border border-stone-600  hover:shadow-stone-600 hover:shadow-md  hover:border-stone-400 duration-150"
-                                   value="Login"
-                                />
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </>
-    )
+          <div className="col-12 col-lg-6 ">
+          <h3 className="mt-5 display-6 text-uppercase text-center text-secondary">Registro</h3>
+            <form className="p-4  flex-column  " onSubmit={registerSubmit}>
+            <div className="w-100 mx-auto mb-4">
+                <input
+                  type="text"
+                  className="form-control py-4"
+                  placeholder="Nombre"
+                  name="registerName"
+                  value={registerName}
+                  onChange={onRegisterInputChange}
+                />
+              </div>
+              <div className="w-100 mx-auto mb-4">
+                <input
+                  type="email"
+                  className="form-control py-4"
+                  placeholder="Correo"
+                  name="registerEmail"
+                  value={registerEmail}
+                  onChange={onRegisterInputChange}
+                />
+              </div>
+              <div className="w-100 mx-auto mb-4">
+                <input
+                  type="password"
+                  className="form-control py-4"
+                  placeholder="Contraseña"
+                  name="registerPassword"
+                  value={registerPassword}
+                  onChange={onRegisterInputChange}
+                />
+              </div>
+
+               <div className="w-100 mx-auto mb-4">
+                <input
+                  type="password"
+                  className="form-control py-4"
+                  placeholder="Repita la contraseña"
+                  name="registerPassword2"
+                  value={registerPassword2}
+                  onChange={onRegisterInputChange}
+                />
+              </div>
+
+              <div className="w-100 mx-auto mb-4 ">
+              <input
+                  type="submit"
+                  className=" btn py-3 fs-3 w-100 btn-outline-secondary"
+                  value="Registrar"
+                />
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </>
+  )
 }

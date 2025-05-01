@@ -70,7 +70,7 @@ export const CalendarModal = () => {
         event.preventDefault();
 
         const difference = differenceInSeconds(formValues.end, formValues.start);
-        console.log(difference);
+      
         if (!(formValues.start && formValues.end) || difference <= 0) {
             Swal.fire("Fechas incorrectas", "Revisar fechas indicadas", "error");
             return;
@@ -83,8 +83,6 @@ export const CalendarModal = () => {
         }
         await startSavingEvent(eventToSave)
         closeDateModal()
-
-
 
     }
     return (

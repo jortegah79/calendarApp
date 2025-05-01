@@ -12,12 +12,7 @@ export const FabAddNew = () => {
             title: "",
             notes: "",
             start: new Date(),
-            end: addHours(new Date(), 2),
-            bgColor: '#888888',
-            user: {
-                _id: '123',
-                name: 'fernando'
-            }
+            end: addHours(new Date(), 2)
         })
         openDateModal();
     }
