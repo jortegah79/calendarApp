@@ -46,7 +46,7 @@ export const LoginPage = () => {
         <div className="row">
           <div className="col-12 col-lg-6 ">
             <h3 className="mt-5 display-6 text-uppercase text-center text-secondary">Ingreso</h3>
-            <h6>( Puedes usar el usuario test@test.es y la contraseña 1111 o registrarte!) </h6>
+            <h6 className="text-center">( Puedes usar el usuario test@test.es y la contraseña 1111 o registrarte!) </h6>
             <form className="p-2 d-flex flex-column " onSubmit={loginSubmit}>
               <div className="w-100 mx-auto mb-4">
                 <input
